@@ -5,7 +5,12 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: #444444;
+  color: black;
+}
+
+p {
+  font-size: 400px;
+  color: black;
 }
 
 
@@ -18,7 +23,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .site-header .navbar-nav .nav-link:hover {
-  color: #ffffff;
+  color: black;
 }
 
 .site-header .navbar-nav .nav-link.active {
