@@ -7,35 +7,67 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
-		<title>Flask Blog</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">	    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+	{% if title %}	
+		<title>Flask Blog - {{ title }}</title>	
+	{% else %}	
+		<title>Flask Blog</title>			<title>Flask Blog</title>
+	{% endif %}
 </head>
 
 <body>
 	<header class="site-header">
 	  <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
-	  	<h1>Binusian Clubs</h1>
+	  	<h1 style="color:white;">Binusian Clubs</h1>
 	    <div class="container">
 	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
 	        <span class="navbar-toggler-icon"></span>
 	      </button>
 	      <div class="collapse navbar-collapse" id="navbarToggle">
 	        <div class="navbar-nav mr-auto">
-	          <a class="nav-item nav-link" href="/"><p style="color:black; font-size:20px">Home</p></a>
-	          <a class="nav-item nav-link" href="/clubs"><p style="color:black; font-size:20px">Clubs</p></a>
-	          <a class="nav-item nav-link" href="/forums"><p style="color:black; font-size:20px">Forms</p></a>
+	          <a class="nav-item nav-link" href="/">Home</a>
+	          <a class="nav-item nav-link" href="/clubs">Clubs</a>
+	          <a class="nav-item nav-link" href="/forums">Forums</a>
 	        </div>
 	        <!-- Navbar Right Side -->
 	        <div class="navbar-nav">
-	          <a class="nav-item nav-link" href="/login"><p style="color:black; font-size:20px">Login</p></a>
-	          <a class="nav-item nav-link" href="/register"><p style="color:black; font-size:20px">Register</p></a>
+	        	{% if current_user.is_authenticated %}
+	        		<a class="nav-item nav-link" href="/profile">Profile</a>
+	        		<a class="nav-item nav-link" href="/myclubs">My Clubs</a>
+	        		<a class="nav-item nav-link" href="/logout">Logout</a>
+
+	        	{% else %}
+	          		<a class="nav-item nav-link" href="/login">Login</a>
+	          		<a class="nav-item nav-link" href="/register">Register</a>
+	          	{% endif %}
 	        </div>
 	      </div>
 	    </div>
 	  </nav>
+
     <div class= "containter">
       <h1> Binus club show case </h1>
     </div>
+=======
+	</header>
+
+	<main role="main" class="container">
+	  <div class="row">
+	    <div class="col-md-8">
+	    	{% with messages = get_flashed_messages(with_categories=true) %}
+	    		{% if messages %}
+	    			{% for category, message in messages %}
+	    				<div class="alert alert-{{ category }}"> 
+	    					{{ message }}
+	    				</div>
+	    			{% endfor %}
+	    		{% endif %}
+	    	{% endwith %}
+	      {% block content %}{% endblock %}
+	    </div>
+	  </div>
+	</main>
+
 
 	<!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -43,5 +75,4 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
-</header>
 </html>
