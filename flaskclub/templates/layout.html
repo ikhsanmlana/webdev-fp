@@ -8,9 +8,9 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">	    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
-	{% if title %}	
-		<title>Flask Blog - {{ title }}</title>	
-	{% else %}	
+	{% if title %}
+		<title>Flask Blog - {{ title }}</title>
+	{% else %}
 		<title>Flask Blog</title>			<title>Flask Blog</title>
 	{% endif %}
 </head>
@@ -44,12 +44,10 @@
 	      </div>
 	    </div>
 	  </nav>
-
     <div class= "containter">
-      <h1> Binus club show case </h1>
+    	<h1> Binus club show case </h1>
     </div>
-=======
-	</header>
+  </header>
 
 	<main role="main" class="container">
 	  <div class="row">
@@ -57,16 +55,16 @@
 	    	{% with messages = get_flashed_messages(with_categories=true) %}
 	    		{% if messages %}
 	    			{% for category, message in messages %}
-	    				<div class="alert alert-{{ category }}"> 
+	    				<div class="alert alert-{{ category }}">
 	    					{{ message }}
 	    				</div>
 	    			{% endfor %}
 	    		{% endif %}
 	    	{% endwith %}
-	      {% block content %}{% endblock %}
 	    </div>
 	  </div>
 	</main>
+   {% block content %}{% endblock %}
 
 
 	<!-- Optional JavaScript -->
