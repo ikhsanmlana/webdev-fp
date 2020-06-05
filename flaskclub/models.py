@@ -19,3 +19,16 @@ class Student(db.Model, UserMixin):
 
 	def __repr__(self):
 		return f"Student('{self.firstname}', '{self.lastname}', '{self.email}')"
+
+class Clubs(db.Model, UserMixin): 
+	__tablename__ = 'clubs'
+	id = db.Column('id', db.Integer, primary_key=True) 
+	name = db.Column('name', db.String(255), nullable=False) 
+	contact = db.Column('contact', db.String(255), nullable=True) 
+	email = db.Column('email', db.String(255), nullable=True) 
+	members = db.Column('members', db.Integer, nullable=False)  
+	image_file = db.Column('image', db.String(20), nullable=False, default='default.jpg')
+	
+
+	def __repr__(self):
+		return f"Clubs('{self.name}')"

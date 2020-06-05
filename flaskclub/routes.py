@@ -1,13 +1,14 @@
 from flask import render_template, flash, redirect, url_for
 from flaskclub import app, db, bcrypt
 from flaskclub.forms import RegistrationForm, LoginForm
-from flaskclub.models import Student
+from flaskclub.models import Student, Clubs
 from flask_login import login_user, current_user, logout_user, login_required
 
 @app.route("/") 
 @app.route("/home") 
 def home():
-	return render_template('home.html')
+	club = Clubs.query.all()
+	return render_template('home.html', club=club)
 
 @app.route("/register", methods=['GET','POST'])
 def register():
@@ -51,4 +52,9 @@ def logout():
 @app.route("/profile")
 @login_required
 def profile():
-	return render_tempalte('profile.html', title='Profile')
+	return render_template('profile.html', title='Profile') 
+
+@app.route("/clubs")
+def clubs():
+	clubs = Clubs.query.all()
+	return render_template('clubs.html', title='Clubs', clubs=clubs)
