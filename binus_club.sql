@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 28, 2020 at 01:59 AM
+-- Generation Time: Jun 05, 2020 at 04:50 PM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 7.3.4
 
@@ -21,6 +21,30 @@ SET time_zone = "+00:00";
 --
 -- Database: `binus_club`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `clubs`
+--
+
+CREATE TABLE `clubs` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `contact` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `members` int(11) NOT NULL,
+  `image` varchar(20) NOT NULL DEFAULT 'default.jpg'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `clubs`
+--
+
+INSERT INTO `clubs` (`id`, `name`, `contact`, `email`, `members`, `image`) VALUES
+(1, 'Club 1 ', '081317621542', 'club1@gmail.com', 3, 'default.jpg'),
+(2, 'Club 2', NULL, 'club2@gmail.com', 2, 'default.jpg'),
+(3, 'Binary', NULL, NULL, 15, 'binary.png');
 
 -- --------------------------------------------------------
 
@@ -50,6 +74,12 @@ INSERT INTO `student` (`student_id`, `first_name`, `last_name`, `email`, `passwo
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `clubs`
+--
+ALTER TABLE `clubs`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `student`

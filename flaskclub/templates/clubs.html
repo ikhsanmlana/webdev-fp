@@ -1,4 +1,16 @@
 {% extends "layout.html" %}
 {% block content %}
+<<<<<<< HEAD
 
+=======
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+				{% for club in clubs %}
+					<img class="rounded-circle account-img" src="{{ url_for('static', filename='club_image/' + club.image_file) }}">
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+>>>>>>> d35c654c2c08ebd228e9d7a8dada95f02bab980e
 {% endblock content %}
