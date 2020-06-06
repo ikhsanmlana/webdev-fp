@@ -4,10 +4,18 @@ from flaskclub.forms import RegistrationForm, LoginForm
 from flaskclub.models import Student
 from flask_login import login_user, current_user, logout_user, login_required
 
-@app.route("/") 
-@app.route("/home") 
+@app.route("/")
+@app.route("/home")
 def home():
 	return render_template('home.html')
+
+@app.route("/clubs")
+def clubs():
+	return render_template('clubs.html')
+
+@app.route("/forums")
+def forums():
+	return render_template('forums.html')
 
 @app.route("/register", methods=['GET','POST'])
 def register():
@@ -16,7 +24,7 @@ def register():
 	form = RegistrationForm()
 
 	if form.validate_on_submit():
-		hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8') 
+		hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
 		user = Student(firstname=form.firstname.data, lastname=form.lastname.data, email=form.email.data, password=hashed_password, gender=form.gender.data, batch=22, id=form.student_id.data)
 		db.session.add(user)
 		db.session.commit()
@@ -32,7 +40,7 @@ def login():
 	if current_user.is_authenticated:
 		return redirect(url_for('home'))
 	form = LoginForm()
-	
+
 	if form.validate_on_submit():
 		user = Student.query.filter_by(email=form.email.data).first()
 		if user and bcrypt.check_password_hash(user.password, form.password.data):
