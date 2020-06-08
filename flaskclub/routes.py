@@ -7,12 +7,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 @app.route("/")
 @app.route("/home")
 def home():
-	club = Clubs.query.all()
-	return render_template('home.html', club=club)
-
-@app.route("/clubs")
-def clubs():
-	return render_template('clubs.html')
+	return render_template('home.html')
 
 @app.route("/forums")
 def forums():
@@ -60,13 +55,11 @@ def logout():
 @app.route("/profile")
 @login_required
 def profile():
-<<<<<<< HEAD
 	return render_tempalte('profile.html', title='Profile')
-=======
 	return render_template('profile.html', title='Profile') 
 
-@app.route("/clubs")
+@app.route("/clubs", methods=['GET','POST'])
 def clubs():
-	clubs = Clubs.query.all()
-	return render_template('clubs.html', title='Clubs', clubs=clubs)
->>>>>>> d35c654c2c08ebd228e9d7a8dada95f02bab980e
+	all_clubs = Clubs.query.all()
+	return render_template('clubs.html', title='Clubs', clubs=all_clubs)
+

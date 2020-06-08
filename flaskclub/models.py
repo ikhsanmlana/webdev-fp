@@ -27,7 +27,7 @@ class Clubs(db.Model, UserMixin):
 	contact = db.Column('contact', db.String(255), nullable=True) 
 	email = db.Column('email', db.String(255), nullable=True) 
 	members = db.Column('members', db.Integer, nullable=False)  
-	image_file = db.Column('image', db.String(20), nullable=False, default='default.jpg')
+	image_file = db.Column('image', db.String(20), nullable=False, default='default.jpg')	
 	
 
 	def __repr__(self):
