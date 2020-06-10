@@ -12,6 +12,7 @@ flask-bcrypt = "*"
 flask-login = "*"
 flask-wtf = "*"
 email-validator = "*"
+mysqlclient = "*"
 
 [requires]
 python_version = "3.8"
