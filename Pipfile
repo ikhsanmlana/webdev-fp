@@ -15,6 +15,7 @@ email-validator = "*"
 mysqlclient = "*"
 pymysql = "*"
 mysqldb-wrapper = "*"
+mysql-connector-python = "*"
 
 [requires]
 python_version = "3.8"
