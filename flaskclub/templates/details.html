@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+{% block content %} 
+    <div class="content-section">
+      <div class="media">
+        <img class="img-fluid" height="325px" width="325px" src="{{ url_for('static', filename='club_image/' + club.image_file) }}" style="margin: 15px 15px 15px 15px">
+        <div class="media-body">
+          <h1 class="display-1">{{ club.name }}</h2>
+          <p > <strong>Email: </strong>{{ club.email }}</p>
+          <p > <strong>Contact Number: </strong>{{ club.contact }}</p> 
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+              Join Club
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Join Club</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    Submit request to join <strong>{{ club.name }} </strong>?
+                  </div>
+                  <div class="modal-footer">
+                    <form method="POST" action=""> 
+                         {{ form.hidden_tag() }}
+                        <div class="form-group">
+                            {{ form.submit(class="btn btn-outline-info") }}
+                        </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+        </div>
+      </div>
+    </div>  
+
+    <div class = "container">
+    <div class="row">
+      <div class="col-md-8"> 
+            <h1 style="font-size:32px; font-family:Verdana; text-align:center;"> Recent club activities </h1>
+            {% for activity in activities %} 
+                {% if activity.club_id == club.id %}
+                  <figure class="item" style="display:inline-block">
+                    <a class="black-text" href="{{url_for('static', filename= activity.image_file)}}"
+                      data-size="1600x1067">
+                      <img alt="picture" class="center" src="{{ url_for('static', filename= activity.image_file) }}"
+                        class="img-fluid" style="margin: 15px 15px 15px 15px"  height="325px" width="325px">
+                      <h3 class="text-center" style="display:block">{{ activity.name }} </h3>
+                        <h5 class="text-center" style="display:block">{{ activity.date_posted }} </h5>
+                    </a>
+                  </figure>
+                {% endif %}
+              {% endfor %}
+
+      </div>
+    </div>
+{% endblock content %}

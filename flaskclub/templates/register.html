@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
-	<div class="content-section">
+	<div class="content-section w-75 p-3" style="margin:0 auto">
 		<form method="POST" action=""> 
 			{{ form.hidden_tag() }}
 			<fieldset class="form-group">
@@ -75,7 +75,19 @@
 				</div>
 				<div class="form-group">
 					{{ form.gender.label }}
-					{{ form.gender(class="form-control form-control-lg") }}
+					
+					{% if form.gender.errors %}
+						{{ form.gender(class="form-control form-control-lg is-invalid")}}
+						<div class = "invalid-feedback">
+							{% for error in form.gender.errors %}
+								<span> {{error}} </span>
+							{% endfor %}
+						</div>
+
+					{% else %}
+						{{ form.gender(class="form-control form-control-lg") }}
+
+					{% endif %}
 				</div>
 				<div class="form-group">
 					{{ form.email.label(class="form-control-label") }}

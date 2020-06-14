@@ -1,11 +1,10 @@
 from flask import render_template, flash, redirect, url_for
 from flaskclub import app, db, bcrypt
-from flaskclub.forms import RegistrationForm, LoginForm
-from flaskclub.models import Student, Clubs
+from flaskclub.forms import RegistrationForm, LoginForm, JoinForm
+from flaskclub.models import Student, Clubs, Activities
 from flask_login import login_user, current_user, logout_user, login_required
 
 @app.route("/")
-@app.route("/home")
 def home():
 	return render_template('home.html')
 
@@ -15,8 +14,8 @@ def forums():
 
 @app.route("/register", methods=['GET','POST'])
 def register():
-	if current_user.is_authenticated:
-		return redirect(url_for('home'))
+	# if current_user.is_authenticated:
+	# 	return redirect(url_for('home'))
 	form = RegistrationForm()
 
 	if form.validate_on_submit():
@@ -59,7 +58,20 @@ def profile():
 	return render_template('profile.html', title='Profile') 
 
 @app.route("/clubs", methods=['GET','POST'])
-def clubs():
+def clubs(): 
+
 	all_clubs = Clubs.query.all()
 	return render_template('clubs.html', title='Clubs', clubs=all_clubs)
+
+@app.route("/club/<int:club_id>", methods=['GET','POST'])
+def club_detail(club_id):
+	form = JoinForm()
+	club = Clubs.query.get_or_404(club_id) 
+	all_activities = Activities.query.all()
+
+	if form.validate_on_submit():
+		flash('Club join request sent! Please wait for your approval.', 'success') 
+		return redirect(url_for('club_detail', club_id=club_id))
+
+	return render_template('details.html', title=club.name, club=club, activities=all_activities, form=form)
 

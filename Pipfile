@@ -13,6 +13,8 @@ flask-login = "*"
 flask-wtf = "*"
 email-validator = "*"
 mysqlclient = "*"
+pymysql = "*"
+mysqldb-wrapper = "*"
 
 [requires]
 python_version = "3.8"

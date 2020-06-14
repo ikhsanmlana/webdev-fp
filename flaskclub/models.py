@@ -31,4 +31,16 @@ class Clubs(db.Model, UserMixin):
 	
 
 	def __repr__(self):
-		return f"Clubs('{self.name}')"
+		return f"Clubs('{self.name}')" 
+
+class Activities(db.Model, UserMixin): 
+	__tablename__ = 'activities'
+	id = db.Column('id', db.Integer, primary_key=True) 
+	name = db.Column('name', db.String(255), nullable=False) 
+	club_id = db.Column('club_id', db.Integer, nullable=False) 
+	image_file = db.Column('image', db.String(20), nullable=False, default='default.jpg')	 
+	date_posted = db.Column('date_posted', db.DateTime, nullable=False)
+	
+
+	def __repr__(self):
+		return f"Activities('{self.name}')"
