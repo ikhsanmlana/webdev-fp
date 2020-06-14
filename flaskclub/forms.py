@@ -7,7 +7,7 @@ class RegistrationForm(FlaskForm):
 	student_id = StringField('Student ID', validators=[DataRequired(), Length(min=1, max=10)])
 	batch = StringField('Batch (e.g. 2021)', validators=[DataRequired(), Length(min=3, max=4)])
 	firstname = StringField('First Name', validators=[DataRequired(), Length(min=2)])
-	lastname = StringField('Last Name', validators=[DataRequired()])
+	lastname = StringField('Last Name')
 	gender = SelectField('Gender', choices=[('M', 'Male'), ('F','Female')])
 	email = StringField('Email', validators=[DataRequired(), Email()])
 	password = PasswordField('Password', validators=[DataRequired(), ])
@@ -34,4 +34,6 @@ class LoginForm(FlaskForm):
 	submit = SubmitField('Login')
 
 class JoinForm(FlaskForm):
-	submit = SubmitField('Join')
+	submit = SubmitField('Join') 
+	add = SubmitField('Add Activity') 
+

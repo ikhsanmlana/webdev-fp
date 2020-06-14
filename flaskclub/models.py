@@ -6,6 +6,11 @@ from flask_login import UserMixin
 def load_user(user_id):
 	return Student.query.get(user_id)
 
+person = db.Table('person', 
+	db.Column('club_id', db.Integer, db.ForeignKey('clubs.id'), primary_key=True),
+	db.Column('student_id', db.String(10), db.ForeignKey('student.student_id'), primary_key=True))
+
+
 class Student(db.Model, UserMixin): 
 	__tablename__ = 'student'
 	id = db.Column('student_id', db.String(10), primary_key=True) 
@@ -15,10 +20,23 @@ class Student(db.Model, UserMixin):
 	password = db.Column('password', db.String(255), nullable=False)  
 	gender = db.Column('gender', db.String(255), nullable=False)  
 	batch = db.Column('batch', db.Integer, nullable=False) 
-	role = db.Column('role', db.String(255), nullable=True) 
+	role = db.Column('role', db.String(255), nullable=True)  
+	club_id = db.Column('club_id', db.Integer, nullable=False) 
+
+	clubs = db.relationship('Clubs', secondary=person, lazy='dynamic', backref=db.backref('people', lazy = 'dynamic'))
+
 
 	def __repr__(self):
 		return f"Student('{self.firstname}', '{self.lastname}', '{self.email}')"
+
+
+class BinusID(db.Model, UserMixin):
+	__tablename__ = 'binus_id' 
+	id = db.Column('binusian_id', db.String(10), primary_key=True)  
+	email = db.Column('email', db.String(255), nullable=True) 
+
+	def __repr__(self):
+		return f"BinusID('{self.id}')"
 
 class Clubs(db.Model, UserMixin): 
 	__tablename__ = 'clubs'

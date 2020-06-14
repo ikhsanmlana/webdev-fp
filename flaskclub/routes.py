@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for
 from flaskclub import app, db, bcrypt
 from flaskclub.forms import RegistrationForm, LoginForm, JoinForm
-from flaskclub.models import Student, Clubs, Activities
+from flaskclub.models import Student, Clubs, Activities, BinusID
 from flask_login import login_user, current_user, logout_user, login_required
 
 @app.route("/")
@@ -16,15 +16,26 @@ def forums():
 def register():
 	# if current_user.is_authenticated:
 	# 	return redirect(url_for('home'))
-	form = RegistrationForm()
+	form = RegistrationForm() 
 
-	if form.validate_on_submit():
-		hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-		user = Student(firstname=form.firstname.data, lastname=form.lastname.data, email=form.email.data, password=hashed_password, gender=form.gender.data, batch=22, id=form.student_id.data)
-		db.session.add(user)
-		db.session.commit()
-		flash('Account Created!', 'success')
-		return redirect(url_for('login'))
+	if form.validate_on_submit(): 
+		user_id = BinusID.query.filter_by(id=form.student_id.data).first()
+		if user_id:
+			hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+			user = Student(firstname=form.firstname.data, lastname=form.lastname.data, email=form.email.data, password=hashed_password, gender=form.gender.data, batch=form.batch.data, id=form.student_id.data)
+			user_id.email=form.email.data 
+			
+
+			db.session.add(user)
+			# db.session.commit()
+
+			# user_id.user = user.id 
+
+			db.session.commit()
+
+			flash('Account Created!', 'success')
+			return redirect(url_for('login')) 
+
 	else:
 		flash('Please fill the data required for registration correctly.', 'danger')
 
@@ -54,7 +65,6 @@ def logout():
 @app.route("/profile")
 @login_required
 def profile():
-	return render_tempalte('profile.html', title='Profile')
 	return render_template('profile.html', title='Profile') 
 
 @app.route("/clubs", methods=['GET','POST'])
@@ -69,9 +79,21 @@ def club_detail(club_id):
 	club = Clubs.query.get_or_404(club_id) 
 	all_activities = Activities.query.all()
 
-	if form.validate_on_submit():
-		flash('Club join request sent! Please wait for your approval.', 'success') 
-		return redirect(url_for('club_detail', club_id=club_id))
+	if form.validate_on_submit(): 
+		if current_user.is_authenticated:
+			flash('Club join request sent! Please wait for your approval.', 'success') 
+			db.create_all()
+			club.people.append(current_user)
+			db.session.commit()
+
+			return redirect(url_for('club_detail', club_id=club_id)) 
+		else: 
+			flash('You need to Log In first.', 'danger') 
+			return redirect(url_for('club_detail', club_id=club_id)) 
 
 	return render_template('details.html', title=club.name, club=club, activities=all_activities, form=form)
 
+@app.route("/add_activity", methods=['GET','POST']) 
+@login_required 
+def add_activity():
+	if (current_user.role != 'member') 

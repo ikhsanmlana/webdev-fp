@@ -7,7 +7,7 @@
           <h1 class="display-1">{{ club.name }}</h2>
           <p > <strong>Email: </strong>{{ club.email }}</p>
           <p > <strong>Contact Number: </strong>{{ club.contact }}</p> 
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+          <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModalCenter">
               Join Club
             </button>
 
@@ -34,7 +34,15 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> 
+
+            {% if current_user.is_authenticated %} 
+                {% if (current_user.role == 'president') or (current_user.role == 'vice_president') or (current_user.role == 'secretary') %}
+                  <form method="POST" action="">
+                    {{ form.add(class="btn btn-primary") }}
+                  </form>
+                {% endif %}
+            {% endif %}
 
         </div>
       </div>
@@ -42,8 +50,8 @@
 
     <div class = "container">
     <div class="row">
-      <div class="col-md-8"> 
-            <h1 style="font-size:32px; font-family:Verdana; text-align:center;"> Recent club activities </h1>
+      <div class="col-6"> 
+            <h1 style="font-size:33px; font-family:Verdana; text-align:left;"> Recent Club Activities </h1>
             {% for activity in activities %} 
                 {% if activity.club_id == club.id %}
                   <figure class="item" style="display:inline-block">
@@ -57,7 +65,16 @@
                   </figure>
                 {% endif %}
               {% endfor %}
-
+        </div>
+        <div class="col-6"> 
+              <h1 style="font-size:32px; font-family:Verdana; text-align:center;"> Members </h1> 
+              <ul class="list-group">
+                {% for user in club.people %} 
+                     <li class="list-group-item">{{  user.firstname }} </li>       
+                 {% endfor %}
+              </ul> 
+        </div>
       </div>
-    </div>
+    </div> 
+
 {% endblock content %}
