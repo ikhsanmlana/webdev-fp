@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime, time 
 from flaskclub import db, login_manager
 from flask_login import UserMixin
 
@@ -24,6 +24,7 @@ class Student(db.Model, UserMixin):
 	club_id = db.Column('club_id', db.Integer, nullable=False) 
 
 	clubs = db.relationship('Clubs', secondary=person, lazy='dynamic', backref=db.backref('people', lazy = 'dynamic'))
+	posts = db.relationship('Post', backref='author', lazy=True)
 
 
 	def __repr__(self):
@@ -61,4 +62,15 @@ class Activities(db.Model, UserMixin):
 	
 
 	def __repr__(self):
-		return f"Activities('{self.name}')"
+		return f"Activities('{self.name}')" 
+
+class Post(db.Model, UserMixin):
+	__tablename__ = 'post'
+	id = db.Column('id', db.Integer, primary_key=True)
+	title = db.Column('title', db.String(100), nullable=False)
+	date_posted = db.Column('date_posted', db.DateTime, nullable=False, default=datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'))
+	content = db.Column('content', db.Text, nullable=False)
+	user_id = db.Column('user_id', db.String(10), db.ForeignKey('student.student_id'), nullable=False)
+
+	def __repr__(self):
+	    return f"Post('{self.title}', '{self.date_posted}')"

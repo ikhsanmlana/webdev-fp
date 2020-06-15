@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm 
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField
+from flask_wtf.file import FileField, FileAllowed
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, TextAreaField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from flaskclub.models import Student
 
@@ -35,5 +36,22 @@ class LoginForm(FlaskForm):
 
 class JoinForm(FlaskForm):
 	submit = SubmitField('Join') 
-	add = SubmitField('Add Activity') 
+	edit = SubmitField('Add Activity') 
+	delete = SubmitField('Delete Activity')
 
+
+class ActivityForm(FlaskForm):
+	title = StringField('Activity Name', validators=[DataRequired(), Length(min=2)]) 
+	picture = FileField('Insert Image', validators=[FileAllowed(['jpg', 'png'])])
+	add = SubmitField('Add Activity') 
+	
+
+class DeleteForm(FlaskForm):
+	title = StringField('Activity Name') 
+	activity = SelectField('Activities', coerce=int)
+	delete = SubmitField('Delete Activity') 
+
+class PostForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    content = TextAreaField('Content', validators=[DataRequired()])
+    submit = SubmitField('Post')

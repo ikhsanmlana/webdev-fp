@@ -7,9 +7,15 @@
           <h1 class="display-1">{{ club.name }}</h2>
           <p > <strong>Email: </strong>{{ club.email }}</p>
           <p > <strong>Contact Number: </strong>{{ club.contact }}</p> 
-          <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModalCenter">
-              Join Club
-            </button>
+
+          {% if current_user.is_authenticated %}
+             {% if current_user.club_id != club.id %}
+              <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModalCenter">
+                  Join Club
+                </button>
+              {% endif %}
+          {% endif %}
+          <br>
 
             <!-- Modal -->
             <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -35,13 +41,21 @@
                 </div>
               </div>
             </div> 
-
             {% if current_user.is_authenticated %} 
-                {% if (current_user.role == 'president') or (current_user.role == 'vice_president') or (current_user.role == 'secretary') %}
-                  <form method="POST" action="">
-                    {{ form.add(class="btn btn-primary") }}
-                  </form>
-                {% endif %}
+              {% if current_user.club_id == club.id %}
+                  {% if (current_user.role == 'president') or (current_user.role == 'vice_president') or (current_user.role == 'secretary') %}
+                  <br>
+                  <div class="form-group">
+                
+                      <form method="POST" action="{{ url_for('add_activity', club_id=club.id) }}">
+                        <div class="input-field">
+                          {{ form.edit(class="btn btn-primary") }}
+                        </div>
+                      </form> 
+                   
+                  </div>
+                  {% endif %}
+              {% endif %}
             {% endif %}
 
         </div>
@@ -50,14 +64,14 @@
 
     <div class = "container">
     <div class="row">
-      <div class="col-6"> 
-            <h1 style="font-size:33px; font-family:Verdana; text-align:left;"> Recent Club Activities </h1>
+      <div class="col-8"> 
+            <h1 style="font-size:33px; font-family:Verdana; text-align:center;"> Recent Club Activities </h1>
             {% for activity in activities %} 
                 {% if activity.club_id == club.id %}
                   <figure class="item" style="display:inline-block">
-                    <a class="black-text" href="{{url_for('static', filename= activity.image_file)}}"
+                    <a class="black-text" href="{{url_for('static', filename= 'activity_image/' + activity.image_file)}}"
                       data-size="1600x1067">
-                      <img alt="picture" class="center" src="{{ url_for('static', filename= activity.image_file) }}"
+                      <img alt="picture" class="center" src="{{ url_for('static', filename= 'activity_image/' + activity.image_file) }}"
                         class="img-fluid" style="margin: 15px 15px 15px 15px"  height="325px" width="325px">
                       <h3 class="text-center" style="display:block">{{ activity.name }} </h3>
                         <h5 class="text-center" style="display:block">{{ activity.date_posted }} </h5>
@@ -66,7 +80,7 @@
                 {% endif %}
               {% endfor %}
         </div>
-        <div class="col-6"> 
+        <div class="col-4"> 
               <h1 style="font-size:32px; font-family:Verdana; text-align:center;"> Members </h1> 
               <ul class="list-group">
                 {% for user in club.people %} 

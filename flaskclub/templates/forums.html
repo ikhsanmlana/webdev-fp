@@ -1,4 +1,25 @@
 {% extends "layout.html" %}
 {% block content %}
+	<div>
+		<h1 class="display-5" style="margin-left:25px;font-family: Roboto Slab">Forums</h1>
+		<br>
+		<a class="btn btn-info" href="{{ url_for('add_post')}}" role="button" style="margin-left:25px;margin-bottom:40px;heght:200px;width:200px;float:right;">New Post</a>	
+		<!-- <button type="button" class="btn btn-primary btn-sm" style="margin-left:25px;margin-bottom:40px;">New Post</button> -->
+	</div> 
 
+
+    {% for post in posts %}
+        <article class="media content-section">
+          
+          <div class="media-body">
+          	<div class = "content-section w-25 p-1" style="margin:0 auto">
+	            <div class="article-metadata">
+	              <a class="mr-2" href="#" style="color:black">{{ post.author.firstname }}</a>
+	              <small class="text-muted">{{ post.date_posted }}</small>
+	            </div>
+	            <p><a class="article-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a></p>
+          	</div>
+          </div>
+        </article>
+    {% endfor %}
 {% endblock content %}

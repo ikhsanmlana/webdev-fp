@@ -1,16 +1,14 @@
+import secrets, os, datetime
 from flask import render_template, flash, redirect, url_for
 from flaskclub import app, db, bcrypt
-from flaskclub.forms import RegistrationForm, LoginForm, JoinForm
-from flaskclub.models import Student, Clubs, Activities, BinusID
+from flaskclub.forms import RegistrationForm, LoginForm, JoinForm, ActivityForm, DeleteForm, PostForm
+from flaskclub.models import Student, Clubs, Activities, BinusID, person, Post 
 from flask_login import login_user, current_user, logout_user, login_required
+
 
 @app.route("/")
 def home():
 	return render_template('home.html')
-
-@app.route("/forums")
-def forums():
-	return render_template('forums.html')
 
 @app.route("/register", methods=['GET','POST'])
 def register():
@@ -75,7 +73,7 @@ def clubs():
 
 @app.route("/club/<int:club_id>", methods=['GET','POST'])
 def club_detail(club_id):
-	form = JoinForm()
+	form = JoinForm() 
 	club = Clubs.query.get_or_404(club_id) 
 	all_activities = Activities.query.all()
 
@@ -93,7 +91,85 @@ def club_detail(club_id):
 
 	return render_template('details.html', title=club.name, club=club, activities=all_activities, form=form)
 
-@app.route("/add_activity", methods=['GET','POST']) 
+def save_picture(form_picture):
+	random_hex = secrets.token_hex(8)
+	_, f_ext = os.path.splitext(form_picture.filename)
+	picture_fn = random_hex + f_ext 
+	picture_path = os.path.join(app.root_path, 'static/activity_image', picture_fn)
+	form_picture.save(picture_path)
+
+	return picture_fn
+
+@app.route("/<int:club_id>/add_activity", methods=['GET','POST']) 
 @login_required 
-def add_activity():
-	if (current_user.role != 'member') 
+def add_activity(club_id):
+	form = ActivityForm()
+	club = Clubs.query.get_or_404(club_id) 
+
+
+	if (current_user.role != 'member') or (current_user.role != ''): 
+		if form.validate_on_submit(): 
+			if form.picture.data: 
+				picture_file = save_picture(form.picture.data)
+				activity = Activities(name=form.title.data, club_id=club_id, image_file=picture_file, date_posted=datetime.date.today()) 
+				
+				db.session.add(activity)
+				db.session.commit()
+
+				flash('Activity Posted!', 'success') 
+
+				return redirect(url_for('club_detail', club_id=club_id)) 
+			else: 
+				flash('Error', 'danger') 
+				return redirect(url_for('add_activity', club_id=club_id)) 
+
+	return render_template('add_activity.html', title=club.name, form=form, club=club)
+
+# @app.route("/<int:club_id>/delete_activity", methods=['GET','POST']) 
+# @login_required 
+# def delete_activity(club_id):
+# 	form = DeleteForm() 
+# 	club = Clubs.query.get_or_404(club_id) 
+	
+# 	activity_list = Activities.query.filter_by(club_id=club_id)
+# 	form.activity.choices = [(activity.id, activity.name) for activity in activity_list]
+
+# 	if (current_user.role != 'member') or (current_user.role != ''): 
+# 		if form.validate_on_submit(): 
+# 			Activities.query.filter_by(id=form.activity.data).delete()
+
+# 			db.session.commit()
+# 			flash('Activity Deleted!', 'success') 
+
+# 			return redirect(url_for('club_detail', club_id=club_id)) 
+			
+# 		else: 
+# 			print(form.errors)
+# 			flash('Error', 'danger')
+# 			return redirect(url_for('club_detail', club_id=club_id)) 
+
+# 	return render_template('delete_activity.html', title=club.name, form=form, club=club)
+
+@app.route("/forums")
+def forums():
+    posts = Post.query.all()
+    return render_template('forums.html', posts=posts)
+
+@app.route("/post/<int:post_id>")
+def post(post_id):
+    post = Post.query.get_or_404(post_id)
+    return render_template('post.html', title=post.title, post=post)
+
+@app.route("/add_post", methods=['GET','POST']) 
+@login_required 
+def add_post():
+	form = PostForm()
+
+	if form.validate_on_submit():
+	    post = Post(title=form.title.data, content=form.content.data, author=current_user)
+	    db.session.add(post)
+	    db.session.commit()
+	    flash('Post has been created!', 'success')
+	    return redirect(url_for('forums'))
+
+	return render_template('add_post.html', title='Add Post', form=form, legend="New Post")
