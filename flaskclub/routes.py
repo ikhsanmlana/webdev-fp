@@ -1,8 +1,8 @@
 import secrets, os, datetime
 from flask import render_template, flash, redirect, url_for
 from flaskclub import app, db, bcrypt
-from flaskclub.forms import RegistrationForm, LoginForm, JoinForm, ActivityForm, DeleteForm, PostForm
-from flaskclub.models import Student, Clubs, Activities, BinusID, person, Post 
+from flaskclub.forms import RegistrationForm, LoginForm, JoinForm, ActivityForm, DeleteForm, PostForm, ReplyForm
+from flaskclub.models import Student, Clubs, Activities, BinusID, person, Post, Reply
 from flask_login import login_user, current_user, logout_user, login_required
 
 
@@ -155,10 +155,11 @@ def forums():
     posts = Post.query.all()
     return render_template('forums.html', posts=posts)
 
-@app.route("/post/<int:post_id>")
+@app.route("/post/<int:post_id>", methods=['GET','POST'])
 def post(post_id):
-    post = Post.query.get_or_404(post_id)
-    return render_template('post.html', title=post.title, post=post)
+    post = Post.query.get_or_404(post_id) 
+    replies = Reply.query.filter_by(post_id=post_id)
+    return render_template('post.html', title=post.title, post=post, replies=replies)
 
 @app.route("/add_post", methods=['GET','POST']) 
 @login_required 
@@ -173,3 +174,17 @@ def add_post():
 	    return redirect(url_for('forums'))
 
 	return render_template('add_post.html', title='Add Post', form=form, legend="New Post")
+
+@app.route("/add_reply/<int:post_id>", methods=['GET','POST']) 
+@login_required 
+def add_reply(post_id):
+	form = ReplyForm()
+
+	if form.validate_on_submit():
+	    reply = Reply(content=form.content.data, user_id=current_user.id, post_id=post_id, author=current_user)
+	    db.session.add(reply)
+	    db.session.commit()
+	    flash('Reply has been posted!', 'success')
+	    return redirect(url_for('post', post_id=post_id))
+
+	return render_template('add_reply.html', title='Post A Reply', form=form, legend="New Reply")

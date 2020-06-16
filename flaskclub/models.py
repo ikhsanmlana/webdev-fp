@@ -24,7 +24,8 @@ class Student(db.Model, UserMixin):
 	club_id = db.Column('club_id', db.Integer, nullable=False) 
 
 	clubs = db.relationship('Clubs', secondary=person, lazy='dynamic', backref=db.backref('people', lazy = 'dynamic'))
-	posts = db.relationship('Post', backref='author', lazy=True)
+	posts = db.relationship('Post', backref='author', lazy=True) 
+	replies = db.relationship('Reply', backref='author', lazy=True)
 
 
 	def __repr__(self):
@@ -74,3 +75,14 @@ class Post(db.Model, UserMixin):
 
 	def __repr__(self):
 	    return f"Post('{self.title}', '{self.date_posted}')"
+
+class Reply(db.Model, UserMixin):
+	__tablename__ = 'reply'
+	id = db.Column('id', db.Integer, primary_key=True)
+	content = db.Column('content', db.Text, nullable=False)
+	date_posted = db.Column('date_posted', db.DateTime, nullable=False, default=datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'))
+	post_id = db.Column('post_id', db.Integer, db.ForeignKey('post.id'), nullable=False)
+	user_id = db.Column('user_id', db.String(10), db.ForeignKey('student.student_id'), nullable=False)
+
+	def __repr__(self):
+	    return f"Reply('{self.post_id}', '{self.date_posted}')"

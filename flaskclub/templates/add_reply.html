@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<body>
+  <section>
+  	<form method="POST" action=""> 
+		{{ form.hidden_tag() }}
+       <div class="text" >
+         {{ form.content.label(class="form-control-label") }}
+        {% if form.content.errors %}
+            {{ form.content(class="form-control form-control-lg is-invalid") }}
+            <div class="invalid-feedback">
+                {% for error in form.content.errors %}
+                    <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+        {% else %}
+            {{ form.content(class="form-control form-control-lg") }}
+        {% endif %}
+         {{ form.submit(class="btn btn-outline-info") }}
+       </div>
+
+       <div class="info bg-primary">
+         <p align="center" style="font-size:18px; color:white; font-weight:bold; font-family:Verdana;">Rules: Bad words are strongly forbidden</p>
+       </div>
+   </form>
+  </section>
+</body>
+{% endblock content %}
