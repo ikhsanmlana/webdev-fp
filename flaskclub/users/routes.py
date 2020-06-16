@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, Blueprint
 from flaskclub import app, db, bcrypt
-from flaskclub.users.forms import RegistrationForm, LoginForm
-from flaskclub.models import Student
+from flaskclub.users.forms import RegistrationForm, LoginForm, RolesForm
+from flaskclub.models import Student, BinusID, Clubs
 from flask_login import login_user, current_user, logout_user, login_required
 
 users = Blueprint('users', __name__)
@@ -22,10 +22,6 @@ def register():
 			
 
 			db.session.add(user)
-			# db.session.commit()
-
-			# user_id.user = user.id 
-
 			db.session.commit()
 
 			flash('Account Created!', 'success')
@@ -61,3 +57,32 @@ def logout():
 @login_required
 def profile():
 	return render_template('profile.html', title='Profile') 
+
+@users.route("/<int:club_id>/edit_roles", methods=['GET','POST'])
+@login_required
+def edit_roles(club_id):
+	form = RolesForm()
+	club = Clubs.query.get_or_404(club_id) 
+
+	if (current_user.role == 'president') or (current_user.role == 'admin') : 
+		if form.validate_on_submit():  
+			user = Student.query.filter_by(id=form.student_id.data).first() 
+			if club_id == user.club_id:
+
+				user.role = form.roles.data
+
+				db.session.commit()
+
+				flash('Role has been changed.', 'success') 
+
+				return redirect(url_for('users.edit_roles', club_id=club_id)) 
+			else:
+				flash('User is not in this club', 'danger') 
+				return redirect(url_for('users.edit_roles', club_id=club_id)) 
+
+	else: 
+		print(form.errors)
+		flash('You are not permitted', 'danger') 
+		return redirect(url_for('main.home')) 
+
+	return render_template('edit_roles.html', title="Edit Roles", form=form, club=club)

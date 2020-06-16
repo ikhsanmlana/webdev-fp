@@ -8,13 +8,19 @@
           <p > <strong>Email: </strong>{{ club.email }}</p>
           <p > <strong>Contact Number: </strong>{{ club.contact }}</p> 
 
-          {% if current_user.is_authenticated %}
-             {% if current_user.club_id != club.id %}
-              <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModalCenter">
-                  Join Club
-                </button>
-              {% endif %}
-          {% endif %}
+          
+           {% if current_user.club_id != club.id %}
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModalCenter">
+                Join Club
+              </button> 
+            {% endif %}
+
+            {% if current_user.club_id == club.id %}
+                  {% if (current_user.role == 'president') %}
+                    <a class="btn btn-outline-info" href="{{url_for('users.edit_roles',club_id=club.id)}}" role="button" style="margin-bottom:0px;width:150px;">Edit Roles</a>  
+                  {% endif %}
+            {% endif %}
+          
           <br>
 
             <!-- Modal -->
@@ -28,7 +34,7 @@
                     </button>
                   </div>
                   <div class="modal-body">
-                    Submit request to join <strong>{{ club.name }} </strong>?
+                    Join <strong>{{ club.name }} </strong>?
                   </div>
                   <div class="modal-footer">
                     <form method="POST" action=""> 
@@ -66,7 +72,7 @@
     <div class="row">
       <div class="col-8"> 
             <h1 style="font-size:33px; font-family:Verdana; text-align:center;"> Recent Club Activities </h1>
-            {% for activity in activities %} 
+            {% for activity in activities.items %} 
                 {% if activity.club_id == club.id %}
                   <figure class="item" style="display:inline-block">
                     <a class="black-text" href="{{url_for('static', filename= 'activity_image/' + activity.image_file)}}"
@@ -75,20 +81,60 @@
                         class="img-fluid" style="margin: 15px 15px 15px 15px"  height="325px" width="325px">
                       <h3 class="text-center" style="display:block">{{ activity.name }} </h3>
                         <h5 class="text-center" style="display:block">{{ activity.date_posted }} </h5>
-                    </a>
+                    </a> 
+                    {% if current_user.is_authenticated %} 
+                      {% if current_user.club_id == club.id %}
+                          {% if (current_user.role == 'president') or (current_user.role == 'vice_president') or (current_user.role == 'secretary') %}
+                            
+                            <a class="btn btn-danger" href="{{ url_for('clubs.delete_activity',  activity_id=activity.id) }}" role="button" style="margin-left:25px;margin-bottom:40px;width:80px;">Delete</a>  
+
+                            {% endif %}
+                      {% endif %}
+                    {% endif %}
                   </figure>
                 {% endif %}
               {% endfor %}
+
+              <div class="col text-center">
+              {% for page_num in activities.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                {% if page_num %}
+                  {% if activities.page == page_num %}
+                    <a class="btn btn-info mb-4" href="{{ url_for('clubs.club_detail', club_id=club.id, page=page_num) }}" style=>{{ page_num }}</a>
+                  {% else %}
+                    <a class="btn btn-outline-info mb-4" href="{{ url_for('clubs.club_detail', club_id=club.id, page=page_num) }}">{{ page_num }}</a>
+                  {% endif %}
+                {% else %}
+                  ...
+                {% endif %}
+              {% endfor %}
+            </div>
         </div>
+
         <div class="col-4"> 
+              <h1 style="font-size:32px; font-family:Verdana; text-align:center;"> Officers </h1> 
+                  <ul class="list-group">
+                    {% for user in club.people|sort(attribute="firstname") %} 
+                         {% if user.role != 'member' %}
+                             <li class="list-group-item">{{  user.firstname }} {{ user.lastname }} -> <strong> {{ user.role.upper() }} </strong> </li>    
+                          {% endif %}       
+                     {% endfor %}
+              </ul> 
+              <br> 
+              <br>
               <h1 style="font-size:32px; font-family:Verdana; text-align:center;"> Members </h1> 
               <ul class="list-group">
-                {% for user in club.people %} 
-                     <li class="list-group-item">{{  user.firstname }} </li>       
+                {% for user in club.people %}  
+                    {% if user.role == 'member' %}
+                       <li class="list-group-item">{{  user.firstname }} {{ user.lastname }} </li>    
+                    {% endif %}   
                  {% endfor %}
               </ul> 
         </div>
       </div>
     </div> 
+
+    <div style="float:center;">
+      
+    </div>
 
 {% endblock content %}

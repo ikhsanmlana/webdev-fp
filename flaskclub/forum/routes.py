@@ -9,7 +9,8 @@ forum = Blueprint('forum', __name__)
 
 @forum.route("/forums")
 def forums():
-    posts = Post.query.all()
+    page = request.args.get('page', 1, type=int)
+    posts = Post.query.paginate(page=page, per_page = 6)
 
     return render_template('forums.html', posts=posts)
 

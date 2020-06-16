@@ -2,7 +2,7 @@ import secrets, os, datetime
 from flask import render_template, flash, redirect, url_for, abort, request, Blueprint
 from flaskclub import app, db, bcrypt
 from flaskclub.clubs.forms import JoinForm, ActivityForm
-from flaskclub.models import Clubs, Activities, person
+from flaskclub.models import Clubs, Activities, person, Student
 from flask_login import login_user, current_user, logout_user, login_required
 from flaskclub.clubs.utils import save_picture
 
@@ -16,14 +16,21 @@ def all_clubs():
 	return render_template('clubs.html', title='Clubs', clubs=all_clubs)
 
 @clubs.route("/club/<int:club_id>", methods=['GET','POST'])
-def club_detail(club_id):
+def club_detail(club_id): 
+	page = request.args.get('page', 1, type=int)
+
 	form = JoinForm() 
 	club = Clubs.query.get_or_404(club_id) 
-	all_activities = Activities.query.all()
+	all_activities = Activities.query.paginate(page=page, per_page = 4)
 
 	if form.validate_on_submit(): 
-		if current_user.is_authenticated:
-			flash('Club join request sent! Please wait for your approval.', 'success') 
+		if current_user.is_authenticated:	
+			user = Student.query.filter_by(id=current_user.id).first()
+			user.club_id = club_id  
+			user.role = 'member'
+
+			flash('You have joined this club!', 'success') 
+			
 			db.create_all()
 			club.people.append(current_user)
 			db.session.commit()
@@ -60,3 +67,22 @@ def add_activity(club_id):
 				return redirect(url_for('clubs.add_activity', club_id=club_id)) 
 
 	return render_template('add_activity.html', title=club.name, form=form, club=club)
+
+@clubs.route("/delete_activity/<int:activity_id>", methods=['GET','POST']) 
+@login_required 
+def delete_activity(activity_id):
+
+	if (current_user.role != 'member') or (current_user.role != ''): 
+		Activities.query.filter_by(id=activity_id).delete()
+
+		db.session.commit()
+		flash('Activity Deleted!', 'success') 
+
+		return redirect(url_for('clubs.all_clubs')) 
+			
+	else: 
+		print(form.errors)
+		flash('Error', 'danger')
+		return redirect(url_for('clubs.all_clubs')) 
+
+	return redirect(url_for('clubs.all_clubs'))

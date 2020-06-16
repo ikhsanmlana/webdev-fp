@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm 
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from flaskclub.models import Student
 
 class RegistrationForm(FlaskForm):
 	student_id = StringField('Student ID', validators=[DataRequired(), Length(min=1, max=10)])
@@ -31,3 +32,8 @@ class LoginForm(FlaskForm):
 	password = PasswordField('Password', validators=[DataRequired()])
 	remember = BooleanField('Remember Me')
 	submit = SubmitField('Login')
+
+class RolesForm(FlaskForm):
+	student_id = StringField('Student ID', validators=[DataRequired(), Length(min=9, max=10)])
+	roles = SelectField('Roles', choices=[('president', 'President'), ('vice_president','Vice President'), ('secretary','Secretary'), ('member', 'Member')])
+	save = SubmitField('Save')
