@@ -48,6 +48,9 @@ class Clubs(db.Model, UserMixin):
 	email = db.Column('email', db.String(255), nullable=True) 
 	members = db.Column('members', db.Integer, nullable=False)  
 	image_file = db.Column('image', db.String(20), nullable=False, default='default.jpg')	
+
+	activities = db.relationship('Activities', backref='activity', lazy=True) 
+	# posts = db.relationship('Post', backref='club', lazy=True) 
 	
 
 	def __repr__(self):
@@ -56,11 +59,11 @@ class Clubs(db.Model, UserMixin):
 class Activities(db.Model, UserMixin): 
 	__tablename__ = 'activities'
 	id = db.Column('id', db.Integer, primary_key=True) 
-	name = db.Column('name', db.String(255), nullable=False) 
-	club_id = db.Column('club_id', db.Integer, nullable=False) 
+	name = db.Column('name', db.String(255), nullable=False)  
 	image_file = db.Column('image', db.String(20), nullable=False, default='default.jpg')	 
 	date_posted = db.Column('date_posted', db.DateTime, nullable=False)
 	
+	club_id = db.Column('club_id', db.Integer, db.ForeignKey('clubs.id'), nullable=False)
 
 	def __repr__(self):
 		return f"Activities('{self.name}')" 
@@ -71,7 +74,9 @@ class Post(db.Model, UserMixin):
 	title = db.Column('title', db.String(100), nullable=False)
 	date_posted = db.Column('date_posted', db.DateTime, nullable=False, default=datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'))
 	content = db.Column('content', db.Text, nullable=False)
+
 	user_id = db.Column('user_id', db.String(10), db.ForeignKey('student.student_id'), nullable=False)
+	# club_id = db.Column('club_id', db.Integer, db.ForeignKey('club.id'), nullable=False)
 
 	def __repr__(self):
 	    return f"Post('{self.title}', '{self.date_posted}')"

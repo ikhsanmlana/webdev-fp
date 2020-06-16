@@ -47,7 +47,7 @@
                   <br>
                   <div class="form-group">
                 
-                      <form method="POST" action="{{ url_for('add_activity', club_id=club.id) }}">
+                      <form method="POST" action="{{ url_for('clubs.add_activity', club_id=club.id) }}">
                         <div class="input-field">
                           {{ form.edit(class="btn btn-primary") }}
                         </div>

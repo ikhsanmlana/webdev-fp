@@ -1,8 +1,6 @@
 from flask_wtf import FlaskForm 
-from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField, TextAreaField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
-from flaskclub.models import Student
 
 class RegistrationForm(FlaskForm):
 	student_id = StringField('Student ID', validators=[DataRequired(), Length(min=1, max=10)])
@@ -33,29 +31,3 @@ class LoginForm(FlaskForm):
 	password = PasswordField('Password', validators=[DataRequired()])
 	remember = BooleanField('Remember Me')
 	submit = SubmitField('Login')
-
-class JoinForm(FlaskForm):
-	submit = SubmitField('Join') 
-	edit = SubmitField('Add Activity') 
-	delete = SubmitField('Delete Activity')
-
-
-class ActivityForm(FlaskForm):
-	title = StringField('Activity Name', validators=[DataRequired(), Length(min=2)]) 
-	picture = FileField('Insert Image', validators=[FileAllowed(['jpg', 'png'])])
-	add = SubmitField('Add Activity') 
-	
-
-class DeleteForm(FlaskForm):
-	title = StringField('Activity Name') 
-	activity = SelectField('Activities', coerce=int)
-	delete = SubmitField('Delete Activity') 
-
-class PostForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()])
-    content = TextAreaField('Content', validators=[DataRequired()])
-    submit = SubmitField('Post')
-
-class ReplyForm(FlaskForm):
-    content = TextAreaField('Content', validators=[DataRequired()])
-    submit = SubmitField('Post')

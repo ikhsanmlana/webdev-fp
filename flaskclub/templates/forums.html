@@ -4,7 +4,7 @@
 		<h1 class="display-5" style="margin-left:25px;font-family: Roboto Slab">Forums</h1>
 		<br>
 		{% if current_user.is_authenticated %}
-			<a class="btn btn-info" href="{{ url_for('add_post')}}" role="button" style="margin-left:25px;margin-bottom:40px;heght:200px;width:200px;float:right;">New Post</a>	
+			<a class="btn btn-info" href="{{ url_for('forum.add_post')}}" role="button" style="margin-left:25px;margin-bottom:40px;heght:200px;width:200px;float:right;">New Post</a>	
 		<!-- <button type="button" class="btn btn-primary btn-sm" style="margin-left:25px;margin-bottom:40px;">New Post</button> -->
 		{% endif %}
 	</div> 
@@ -20,7 +20,7 @@
 	              <a class="mr-2" href="#" style="color:black">{{ post.author.firstname }} {{post.author.lastname}}</a>
 	              <small class="text-muted">{{ post.date_posted }}</small>
 	            </div>
-	            <p><a class="article-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a></p>
+	            <p><a class="article-title" href="{{ url_for('forum.post', post_id=post.id) }}">{{ post.title }}</a></p>
           	</div>
           	{% endfor %}
           </div>

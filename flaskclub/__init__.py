@@ -19,6 +19,14 @@ app.config['SQLALCHEMY_POOL_RECYCLE'] = 28799
 db = SQLAlchemy(app) 
 bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
-login_manager.login_view = 'login'
+login_manager.login_view = 'users.login'
 
-from flaskclub import routes
+from flaskclub.users.routes import users
+from flaskclub.forum.routes import forum
+from flaskclub.clubs.routes import clubs
+from flaskclub.main.routes import main
+
+app.register_blueprint(users)
+app.register_blueprint(forum)
+app.register_blueprint(clubs)
+app.register_blueprint(main)
