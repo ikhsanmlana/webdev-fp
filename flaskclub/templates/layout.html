@@ -43,8 +43,13 @@
 				          {{current_user.firstname}}
 				        </a>
 				        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+
 				          <a class="nav-item nav-link" href="{{url_for('users.profile', id=current_user.id)}}" style="color:black">My Profile</a>
+				          {% if current_user.role == 'admin' %} 
+				          	<a class="nav-item nav-link" href="{{url_for('users.dashboard', role=current_user.role)}}" style="color:brown">Admin Dashboard</a>
+				          {% endif %}
 				          <a class="nav-item nav-link" href="{{url_for('users.logout')}}" style="color:red">Logout</a>
+
 				          
 				        </div>
 				      </li>

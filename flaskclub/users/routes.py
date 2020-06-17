@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, Blueprint
 from flaskclub import app, db, bcrypt
 from flaskclub.users.forms import RegistrationForm, LoginForm, RolesForm, UpdateAccountForm
-from flaskclub.models import Student, BinusID, Clubs
+from flaskclub.models import Student, BinusID, Clubs, Admin
 from flask_login import login_user, current_user, logout_user, login_required
 from flaskclub.users.utils import save_picture_profile
 
@@ -20,16 +20,15 @@ def register():
 			hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
 			user = Student(firstname=form.firstname.data, lastname=form.lastname.data, email=form.email.data, password=hashed_password, gender=form.gender.data, batch=form.batch.data, id=form.student_id.data)
 			user_id.email=form.email.data 
-			
+
 
 			db.session.add(user)
 			db.session.commit()
 
 			flash('Account Created!', 'success')
 			return redirect(url_for('users.login')) 
-
-	else:
-		flash('Please fill the data required for registration correctly.', 'danger')
+	# else:
+	# 	flash('Please fill the data required for registration correctly.', 'danger')
 
 	return render_template('register.html', title='Register', form=form)
 
@@ -39,8 +38,10 @@ def login():
 		return redirect(url_for('main.home'))
 	form = LoginForm()
 
-	if form.validate_on_submit():
+	if form.validate_on_submit(): 
+	
 		user = Student.query.filter_by(email=form.email.data).first()
+
 		if user and bcrypt.check_password_hash(user.password, form.password.data):
 			login_user(user, remember=form.remember.data)
 			return redirect(url_for('main.home'))
@@ -54,16 +55,13 @@ def logout():
 	logout_user()
 	return redirect(url_for('main.home'))
 
-@users.route("/profile/<id>")
-@login_required
+@users.route("/profile/<id>", methods=['GET', 'POST'])
 def profile(id):
 	myclub = Clubs.query.get_or_404(current_user.club_id) 
 	club = Clubs.query.all() 
 	student = Student.query.get_or_404(id)
-	form = UpdateAccountForm()
-
-
-	return render_template('profile.html', title='Profile', myclub=myclub, student=student, form=form) 
+	
+	return render_template('profile.html', title='Profile', myclub=myclub, student=student, club=club) 
 
 @users.route("/<int:club_id>/edit_roles", methods=['GET','POST'])
 @login_required
@@ -129,4 +127,10 @@ def delete_picture(id):
 				return redirect(url_for('users.profile', id=id))
 		else:
 			flash('Picture removed.', 'success')
-			return redirect(url_for('users.change_image', id=id))
+			return redirect(url_for('users.change_image', id=id)) 
+
+@users.route("/<role>/dashboard", methods=['GET', 'POST']) 
+@login_required 
+def dashboard(role):
+	
+	return render_template('dashboard.html') 

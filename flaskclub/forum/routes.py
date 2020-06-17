@@ -16,8 +16,10 @@ def forums():
 
 @forum.route("/post/<int:post_id>", methods=['GET','POST'])
 def post(post_id):
+
     post = Post.query.get_or_404(post_id) 
     replies = Reply.query.filter_by(post_id=post_id)
+
     return render_template('post.html', title=post.title, post=post, replies=replies)
 
 @forum.route("/add_post", methods=['GET','POST']) 

@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block content %}
+	<div>
+		<h1 class="display-5 text-center" style="font-family: Roboto Slab;font-size:60px ">Dashboard</h1>
+		<br>
+		
+		<!-- <button type="button" class="btn btn-primary btn-sm" style="margin-left:25px;margin-bottom:40px;">New Post</button> -->
+		
+	</div>   
+        <article class="media content-section w-50" style="margin:0 auto;margin-bottom:20px">        
+        	<a class="btn btn-info" href="{{ url_for('clubs.new_club')}}" role="button" style="margin-top:20px;margin-bottom:40px;width:200px;margin-left:auto;margin-right:auto">New Club</a>  
+        </article>
+    
+{% endblock content %}

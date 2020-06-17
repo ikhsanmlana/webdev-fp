@@ -1,10 +1,10 @@
 import secrets, os, datetime
 from flask import render_template, flash, redirect, url_for, abort, request, Blueprint
 from flaskclub import app, db, bcrypt
-from flaskclub.clubs.forms import JoinForm, ActivityForm
+from flaskclub.clubs.forms import JoinForm, ActivityForm, NewClubForm
 from flaskclub.models import Clubs, Activities, person, Student
 from flask_login import login_user, current_user, logout_user, login_required
-from flaskclub.clubs.utils import save_picture
+from flaskclub.clubs.utils import save_picture, save_picture_club
 
 
 clubs = Blueprint('clubs', __name__)
@@ -86,3 +86,31 @@ def delete_activity(activity_id):
 		return redirect(url_for('clubs.all_clubs')) 
 
 	return redirect(url_for('clubs.all_clubs'))
+
+@clubs.route("/new_club", methods=['GET','POST']) 
+@login_required 
+def new_club(): 
+	form = NewClubForm() 
+	all_clubs = db.session.query(Clubs).count()
+
+	
+
+	if (current_user.role == 'admin') : 
+		if form.validate_on_submit(): 
+			if form.picture.data: 
+				picture_file = save_picture_club(form.picture.data)
+				club = Clubs(name=form.name.data, id=form.id.data, image_file=picture_file, contact=form.contact.data, email=form.email.data, ) 
+				
+				return redirect(url_for('users.dashboard', role=current_user.role)) 
+			else: 
+				club = Clubs(name=form.name.data, id=form.id.data, contact=form.contact.data, email=form.email.data) 
+	
+
+			db.session.add(club)
+			db.session.commit()
+			flash('Club Added!', 'success') 
+			return redirect(url_for('users.dashboard', role=current_user.role)) 
+			
+
+	
+	return render_template('add_club.html', title="New Club", form=form, clubs=all_clubs)

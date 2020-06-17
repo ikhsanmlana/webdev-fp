@@ -22,7 +22,7 @@ class Student(db.Model, UserMixin):
 	batch = db.Column('batch', db.Integer, nullable=False) 
 	role = db.Column('role', db.String(255), nullable=True)  
 	club_id = db.Column('club_id', db.Integer, nullable=False) 
-	image_file = db.Column('image_file', db.String(20), nullable=False, default='default_profile.jpg')	
+	image_file = db.Column('image_file', db.String(20), nullable=False, default='default.jpg')	
 
 	clubs = db.relationship('Clubs', secondary=person, lazy='dynamic', backref=db.backref('people', lazy = 'dynamic'))
 	posts = db.relationship('Post', backref='author', lazy=True) 
@@ -47,10 +47,9 @@ class Clubs(db.Model, UserMixin):
 	name = db.Column('name', db.String(255), nullable=False) 
 	contact = db.Column('contact', db.String(255), nullable=True) 
 	email = db.Column('email', db.String(255), nullable=True) 
-	members = db.Column('members', db.Integer, nullable=False)  
-	image_file = db.Column('image', db.String(20), nullable=False, default='default.jpg')	
+	image_file = db.Column('image', db.String(20), nullable=False, default='default.png')	
 
-	activities = db.relationship('Activities', backref='activity', lazy=True) 
+	activities = db.relationship('Activities', backref='activ', lazy=True) 
 	# posts = db.relationship('Post', backref='club', lazy=True) 
 	
 
@@ -92,3 +91,14 @@ class Reply(db.Model, UserMixin):
 
 	def __repr__(self):
 	    return f"Reply('{self.post_id}', '{self.date_posted}')"
+
+class Admin(db.Model, UserMixin):
+	id = db.Column('id', db.Integer, primary_key=True) 
+	username = db.Column('username', db.String(255), nullable=False, unique=True)
+	email = db.Column('email', db.String(255), nullable=False, unique=True)
+	password = db.Column('password', db.String(255), nullable=False) 
+
+	def __repr__(self):
+	    return f"Admin('{self.usernamed}')"
+
+	

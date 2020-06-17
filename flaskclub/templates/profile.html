@@ -1,10 +1,11 @@
 {% extends "layout.html" %}
 {% block content %}
-    <div class="content-section  w-75 p-3" style="margin:0 auto">
+    <div class="content-section w-75 p-3" style="margin:0 auto">
       <div class="media">
         <img class="rounded-circle account-img" src="{{ url_for('static', filename='profile_picture/' + student.image_file) }}">
         <div class="media-body">
           <h2 class="account-heading" >{{ student.firstname }} {{ student.lastname }} </h2>
+          <p class="text-secondary" style="margin-left:5px;">Batch {{ student.batch }}</p> 
           <p class="text-secondary" style="margin-left:5px;">{{ student.email }}</p> 
           {% if current_user.is_authenticated %} 
           	{% if current_user.id == student.id %}
@@ -13,13 +14,14 @@
           {% endif %}
         </div> 
     	</div>
-
     </div>
+
     <br>
+
    <div class="content-section  w-50 p-2" style="margin:0 auto">
 		<div class="list-group  w-50 p-2" style="margin:0 auto"> 
 			<h1 class="display-9 text-center" style="font-family:Sriracha">My Clubs</h1>
-			{% if student.role != 'member' %}
+			{% if (student.role != 'member' ) and (student.role != None) %}
 	 			<a href="{{ url_for('clubs.club_detail', club_id=myclub.id) }}" class="list-group-item" style="color:black"> <img class="rounded-circle img-fluid" height="125px" width="125px" src="{{ url_for('static', filename='club_image/' + myclub.image_file) }}" style="margin-right:10px">{{ myclub.name }} -> <strong>{{student.role.upper()}}</strong> </a>
 			{% else %}
 				{% for club in student.clubs %}
@@ -29,7 +31,5 @@
 			
 		</div> 
 	</div>
-
-
 
 {% endblock content %}

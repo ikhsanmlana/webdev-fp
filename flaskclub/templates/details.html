@@ -16,7 +16,7 @@
             {% endif %}
 
             {% if current_user.club_id == club.id %}
-                  {% if (current_user.role == 'president') %}
+                  {% if (current_user.role == 'president') or (current_user.role == 'admin') %}
                     <a class="btn btn-outline-info" href="{{url_for('users.edit_roles',club_id=club.id)}}" role="button" style="margin-bottom:0px;width:150px;">Edit Roles</a>  
                   {% endif %}
             {% endif %}
