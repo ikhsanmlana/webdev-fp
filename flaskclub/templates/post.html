@@ -15,7 +15,7 @@
     <div class="media-body"> 
       <div style="margin-bottom:45px;">
         <div class="article-metadata">
-          <a class="mr-2" href="#">{{ post.author.firstname }} {{post.author.lastname}}</a>
+          <a class="mr-2" href="{{ url_for('users.profile', id=author.id) }}">{{ post.author.firstname }} {{post.author.lastname}}</a>
           <small class="text-muted">{{ post.date_posted }}</small>
           <h2 class="article-title">{{ post.title }}</h2>
         </div>
@@ -27,7 +27,7 @@
     {% for reply in replies %}
     <div style="margin-bottom:25px;">
         <div class="article-metadata">
-            <a class="mr-2" href="#">{{ reply.author.firstname }} {{reply.author.lastname}}</a>
+            <a class="mr-2" href="{{ url_for('users.profile', id=author.id) }}">{{ reply.author.firstname }} {{reply.author.lastname}}</a>
             <small class="text-muted">{{ reply.date_posted }}</small>
         </div>
           <p class="article-content">{{ reply.content }}</p>

@@ -10,6 +10,8 @@
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='custom.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@577&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sriracha&display=swap" rel="stylesheet">
+
     
 	{% if title %}
 		<title>Binusian Club - {{ title }}</title>
@@ -21,7 +23,7 @@
 <body>
 	<header class="site-header">
 	  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-	  	<h1 ><a href="{{ url_for('main.home') }}" style="color:white;text-decoration:none">BinusianClubs</a></h1>
+	  	<h1 ><a href="{{ url_for('main.home') }}" style="color:white;text-decoration:none;font-family:Sriracha">BinusianClubs</a></h1>
 	    <div class="container">
 	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
 	        <span class="navbar-toggler-icon"></span>
@@ -34,10 +36,20 @@
 	        </div>
 	        <!-- Navbar Right Side -->
 	        <div class="navbar-nav">
-	        	{% if current_user.is_authenticated %}
-	        		<a class="nav-item nav-link" href="{{url_for('users.profile')}}">Profile</a>
-	        		<a class="nav-item nav-link" href="/myclubs">My Clubs</a>
-	        		<a class="nav-item nav-link" href="{{url_for('users.logout')}}">Logout</a>
+	        	{% if current_user.is_authenticated %} 
+	        		<a href="{{ url_for('users.profile', id=current_user.id) }}" style="color:black"><img class="rounded-circle img-fluid" height="45px" width="45px" src="{{ url_for('static', filename='profile_picture/' + current_user.image_file) }}" style="margin-right:0px"></a> 
+	        		 <li class="nav-item dropdown">
+				        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				          {{current_user.firstname}}
+				        </a>
+				        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+				          <a class="nav-item nav-link" href="{{url_for('users.profile', id=current_user.id)}}" style="color:black">My Profile</a>
+				          <a class="nav-item nav-link" href="{{url_for('users.logout')}}" style="color:red">Logout</a>
+				          
+				        </div>
+				      </li>
+	        		
+	        		
 
 	        	{% else %}
 	          		<a class="nav-item nav-link" href="{{url_for('users.login')}}">Login</a>

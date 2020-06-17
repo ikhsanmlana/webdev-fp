@@ -115,7 +115,7 @@
                   <ul class="list-group">
                     {% for user in club.people|sort(attribute="firstname") %} 
                          {% if user.role != 'member' %}
-                             <li class="list-group-item">{{  user.firstname }} {{ user.lastname }} -> <strong> {{ user.role.upper() }} </strong> </li>    
+                             <a href="{{ url_for('users.profile', id=user.id) }}" class="list-group-item">{{  user.firstname }} {{ user.lastname }} -> <strong> {{ user.role.upper() }} </strong> </a>    
                           {% endif %}       
                      {% endfor %}
               </ul> 
@@ -125,7 +125,7 @@
               <ul class="list-group">
                 {% for user in club.people %}  
                     {% if user.role == 'member' %}
-                       <li class="list-group-item">{{  user.firstname }} {{ user.lastname }} </li>    
+                       <a href="{{ url_for('users.profile', id=user.id) }}" class="list-group-item">{{  user.firstname }} {{ user.lastname }} </a>    
                     {% endif %}   
                  {% endfor %}
               </ul> 

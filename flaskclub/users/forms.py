@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm 
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField
+from flask_wtf.file import FileField, FileAllowed
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from flaskclub.models import Student
 
@@ -10,7 +11,7 @@ class RegistrationForm(FlaskForm):
 	lastname = StringField('Last Name')
 	gender = SelectField('Gender', choices=[('M', 'Male'), ('F','Female')])
 	email = StringField('Email', validators=[DataRequired(), Email()])
-	password = PasswordField('Password', validators=[DataRequired(), ])
+	password = PasswordField('Password', validators=[DataRequired()])
 	confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')]) 
 	submit = SubmitField('Register')
 
@@ -36,4 +37,8 @@ class LoginForm(FlaskForm):
 class RolesForm(FlaskForm):
 	student_id = StringField('Student ID', validators=[DataRequired(), Length(min=9, max=10)])
 	roles = SelectField('Roles', choices=[('president', 'President'), ('vice_president','Vice President'), ('secretary','Secretary'), ('member', 'Member')])
-	save = SubmitField('Save')
+	save = SubmitField('Save') 
+
+class UpdateAccountForm(FlaskForm):
+	picture = FileField('Update Profile Picture', validators=[FileAllowed(['jpg', 'png'])])
+	submit = SubmitField('Update Profile')	

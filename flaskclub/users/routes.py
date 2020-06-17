@@ -1,8 +1,9 @@
 from flask import render_template, flash, redirect, url_for, Blueprint
 from flaskclub import app, db, bcrypt
-from flaskclub.users.forms import RegistrationForm, LoginForm, RolesForm
+from flaskclub.users.forms import RegistrationForm, LoginForm, RolesForm, UpdateAccountForm
 from flaskclub.models import Student, BinusID, Clubs
 from flask_login import login_user, current_user, logout_user, login_required
+from flaskclub.users.utils import save_picture_profile
 
 users = Blueprint('users', __name__)
 
@@ -53,10 +54,16 @@ def logout():
 	logout_user()
 	return redirect(url_for('main.home'))
 
-@users.route("/profile")
+@users.route("/profile/<id>")
 @login_required
-def profile():
-	return render_template('profile.html', title='Profile') 
+def profile(id):
+	myclub = Clubs.query.get_or_404(current_user.club_id) 
+	club = Clubs.query.all() 
+	student = Student.query.get_or_404(id)
+	form = UpdateAccountForm()
+
+
+	return render_template('profile.html', title='Profile', myclub=myclub, student=student, form=form) 
 
 @users.route("/<int:club_id>/edit_roles", methods=['GET','POST'])
 @login_required
@@ -86,3 +93,40 @@ def edit_roles(club_id):
 		return redirect(url_for('main.home')) 
 
 	return render_template('edit_roles.html', title="Edit Roles", form=form, club=club)
+
+@users.route("/update_profile/<id>", methods=['GET','POST']) 
+@login_required 
+def change_image(id):
+	form = UpdateAccountForm()
+
+	if current_user.is_authenticated:
+		if form.validate_on_submit(): 
+			if form.picture.data: 
+				picture_file = save_picture_profile(form.picture.data)
+				current_user.image_file = picture_file
+				
+				db.session.commit()
+
+				flash('Image Updated!', 'success') 
+
+				return redirect(url_for('users.profile', id=id)) 
+			else: 
+				flash('Error', 'danger') 
+				return redirect(url_for('users.change_image', id=id)) 
+
+	return render_template('update_profile.html', title="Profile", form=form) 
+
+@users.route("/update_profile/delete/<id>", methods=['POST'])
+@login_required
+def delete_picture(id): 
+	if current_user.is_authenticated: 
+		if current_user.image_file != 'default.jpg':
+			if current_user.id == id: 
+				current_user.image_file = 'default.jpg'
+
+				db.session.commit()
+				flash('Picture removed.', 'success')
+				return redirect(url_for('users.profile', id=id))
+		else:
+			flash('Picture removed.', 'success')
+			return redirect(url_for('users.change_image', id=id))

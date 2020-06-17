@@ -22,6 +22,7 @@ class Student(db.Model, UserMixin):
 	batch = db.Column('batch', db.Integer, nullable=False) 
 	role = db.Column('role', db.String(255), nullable=True)  
 	club_id = db.Column('club_id', db.Integer, nullable=False) 
+	image_file = db.Column('image_file', db.String(20), nullable=False, default='default_profile.jpg')	
 
 	clubs = db.relationship('Clubs', secondary=person, lazy='dynamic', backref=db.backref('people', lazy = 'dynamic'))
 	posts = db.relationship('Post', backref='author', lazy=True) 
