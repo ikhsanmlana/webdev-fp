@@ -124,12 +124,13 @@
                 <tbody>
                   {% for user in club.people|sort(attribute="firstname") %} 
                   <tr>
-                    
-                     {% if user.role != 'member' %}
-                         <td><a href="{{ url_for('users.profile', id=user.id) }}">{{  user.firstname }} {{ user.lastname }}   </a></td> 
-                         <td> {{ user.batch }} </td>
-                         <td><strong> {{ user.role.upper() }} </strong></td>   
-                      {% endif %}                         
+                    {% if user.club_id == club.id %}                    
+                       {% if user.role != 'member' %}
+                           <td><a href="{{ url_for('users.profile', id=user.id) }}">{{  user.firstname }} {{ user.lastname }}   </a></td> 
+                           <td> {{ user.batch }} </td>
+                           <td><strong> {{ user.role.upper() }} </strong></td>   
+                        {% endif %}    
+                    {% endif %}                     
                    </tr>
                    {% endfor %}
                  </tbody>

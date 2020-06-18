@@ -71,7 +71,7 @@ def update_post(post_id):
     return render_template('add_post.html', title='Update Post',
                            form=form, legend='Update Post')
 
-@forum.route("/post/<int:post_id>/delete", methods=['POST'])
+@forum.route("/post/<int:post_id>/delete", methods=['POST', 'GET'])
 @login_required
 def delete_post(post_id):
     post = Post.query.get_or_404(post_id)

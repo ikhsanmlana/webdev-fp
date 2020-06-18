@@ -20,6 +20,7 @@ class ActivityForm(FlaskForm):
 class NewClubForm(FlaskForm):
 	id =  StringField('Club ID', validators=[DataRequired(), Length(min=1)]) 
 	name = StringField('Club Name', validators=[DataRequired(), Length(min=2)]) 
+	acronym = StringField('Acronym', validators=[DataRequired(), Length(min=2)]) 
 	contact = StringField('Contact', validators=[DataRequired(), Length(min=2)]) 
 	picture = FileField('Insert Image', validators=[FileAllowed(['jpg', 'png'])]) 
 	email = StringField('Email', validators=[DataRequired(), Email()]) 

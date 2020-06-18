@@ -99,11 +99,11 @@ def new_club():
 		if form.validate_on_submit(): 
 			if form.picture.data: 
 				picture_file = save_picture_club(form.picture.data)
-				club = Clubs(name=form.name.data, id=form.id.data, image_file=picture_file, contact=form.contact.data, email=form.email.data, ) 
+				club = Clubs(name=form.name.data, id=form.id.data, image_file=picture_file, contact=form.contact.data, email=form.email.data, acronym=form.acronym.data) 
 				
 				# return redirect(url_for('users.dashboard', role=current_user.role)) 
 			else: 
-				club = Clubs(name=form.name.data, id=form.id.data, contact=form.contact.data, email=form.email.data) 
+				club = Clubs(name=form.name.data, id=form.id.data, contact=form.contact.data, email=form.email.data, acronym=form.acronym.data) 
 	
 
 			db.session.add(club)
