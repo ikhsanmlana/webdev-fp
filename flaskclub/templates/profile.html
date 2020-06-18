@@ -22,10 +22,10 @@
 		<div class="list-group  w-50 p-2" style="margin:0 auto"> 
 			<h1 class="display-9 text-center" style="font-family:Sriracha">My Clubs</h1>
 			{% if (student.role != 'member' ) and (student.role != None) %}
-	 			<a href="{{ url_for('clubs.club_detail', club_id=myclub.id) }}" class="list-group-item" style="color:black"> <img class="rounded-circle img-fluid" height="125px" width="125px" src="{{ url_for('static', filename='club_image/' + myclub.image_file) }}" style="margin-right:10px">{{ myclub.name }} -> <strong>{{student.role.upper()}}</strong> </a>
+	 			<a href="{{ url_for('clubs.club_detail', club_id=myclub.id) }}" class="list-group-item" style="color:black"> <img class="rounded-circle img-fluid" height="75px" width="75px" src="{{ url_for('static', filename='club_image/' + myclub.image_file) }}" style="margin-right:10px">{{ myclub.acronym }} -> <strong>{{student.role.upper()}}</strong> </a>
 			{% else %}
 				{% for club in student.clubs %}
-		 			<a href="{{ url_for('clubs.club_detail', club_id=club.id) }}" class="list-group-item " style="color:black"> <img class="rounded-circle img-fluid" height="125px" width="125px" src="{{ url_for('static', filename='club_image/' + club.image_file) }}" style="margin-right:10px">{{ club.name }}  -> <strong>{{student.role.upper()}}</strong> </a>
+		 			<a href="{{ url_for('clubs.club_detail', club_id=club.id) }}" class="list-group-item " style="color:black"> <img class="rounded-circle img-fluid" height="75px" width="75px" src="{{ url_for('static', filename='club_image/' + club.image_file) }}" style="margin-right:10px">{{ club.acronym }}  -> <strong>{{student.role.upper()}}</strong> </a>
 				{% endfor %}
 			{% endif %}
 			

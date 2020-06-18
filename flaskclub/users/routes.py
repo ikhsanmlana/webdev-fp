@@ -69,21 +69,24 @@ def edit_roles(club_id):
 	form = RolesForm()
 	club = Clubs.query.get_or_404(club_id) 
 
+	
+
+
 	if (current_user.role == 'president') or (current_user.role == 'admin') : 
 		if form.validate_on_submit():  
 			user = Student.query.filter_by(id=form.student_id.data).first() 
-			if club_id == user.club_id:
+			for club in user.clubs:  
+				if club.id == club_id: 
+					user.role = form.roles.data
+					user.club_id = club_id
 
-				user.role = form.roles.data
+					db.session.commit()
 
-				db.session.commit()
+					flash('Role has been changed.', 'success') 
 
-				flash('Role has been changed.', 'success') 
-
-				return redirect(url_for('users.edit_roles', club_id=club_id)) 
-			else:
-				flash('User is not in this club', 'danger') 
-				return redirect(url_for('users.edit_roles', club_id=club_id)) 
+					return redirect(url_for('users.edit_roles', club_id=club_id))
+			flash('User is not in this club', 'danger') 
+			return redirect(url_for('users.edit_roles', club_id=club_id)) 
 
 	else: 
 		print(form.errors)

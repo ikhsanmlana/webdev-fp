@@ -24,7 +24,7 @@ def club_detail(club_id):
 	all_activities = Activities.query.paginate(page=page, per_page = 4)
 
 	if form.validate_on_submit(): 
-		if current_user.is_authenticated:	
+		if (current_user.is_authenticated) and (current_user.role != 'admin') :	
 			user = Student.query.filter_by(id=current_user.id).first()
 			user.club_id = club_id  
 			user.role = 'member'
@@ -101,7 +101,7 @@ def new_club():
 				picture_file = save_picture_club(form.picture.data)
 				club = Clubs(name=form.name.data, id=form.id.data, image_file=picture_file, contact=form.contact.data, email=form.email.data, ) 
 				
-				return redirect(url_for('users.dashboard', role=current_user.role)) 
+				# return redirect(url_for('users.dashboard', role=current_user.role)) 
 			else: 
 				club = Clubs(name=form.name.data, id=form.id.data, contact=form.contact.data, email=form.email.data) 
 	

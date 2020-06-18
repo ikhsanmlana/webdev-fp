@@ -47,6 +47,7 @@ class Clubs(db.Model, UserMixin):
 	name = db.Column('name', db.String(255), nullable=False) 
 	contact = db.Column('contact', db.String(255), nullable=True) 
 	email = db.Column('email', db.String(255), nullable=True) 
+	acronym = db.Column('acronym', db.String(10), nullable=False) 
 	image_file = db.Column('image', db.String(20), nullable=False, default='default.png')	
 
 	activities = db.relationship('Activities', backref='activ', lazy=True) 

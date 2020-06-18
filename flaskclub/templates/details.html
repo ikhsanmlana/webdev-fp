@@ -4,7 +4,8 @@
       <div class="media">
         <img class="img-fluid" height="325px" width="325px" src="{{ url_for('static', filename='club_image/' + club.image_file) }}" style="margin: 15px 15px 15px 15px">
         <div class="media-body">
-          <h1 class="display-1">{{ club.name }}</h2>
+          <h1 class="display-4">{{ club.name }}</h2> 
+          <p > <strong>aka </strong>{{ club.acronym }}</p>
           <p > <strong>Email: </strong>{{ club.email }}</p>
           <p > <strong>Contact Number: </strong>{{ club.contact }}</p> 
 
@@ -15,7 +16,7 @@
               </button> 
             {% endif %}
 
-            {% if current_user.club_id == club.id %}
+            {% if (current_user.club_id == club.id) or (current_user.role=='admin')%}
                   {% if (current_user.role == 'president') or (current_user.role == 'admin') %}
                     <a class="btn btn-outline-info" href="{{url_for('users.edit_roles',club_id=club.id)}}" role="button" style="margin-bottom:0px;width:150px;">Edit Roles</a>  
                   {% endif %}
