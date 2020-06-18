@@ -21,7 +21,7 @@ def club_detail(club_id):
 
 	form = JoinForm() 
 	club = Clubs.query.get_or_404(club_id) 
-	all_activities = Activities.query.paginate(page=page, per_page = 4)
+	all_activities = Activities.query.order_by(Activities.date_posted.desc()).paginate(page=page, per_page = 4)
 
 	if form.validate_on_submit(): 
 		if (current_user.is_authenticated) and (current_user.role != 'admin') :	
@@ -78,14 +78,14 @@ def delete_activity(activity_id):
 		db.session.commit()
 		flash('Activity Deleted!', 'success') 
 
-		return redirect(url_for('clubs.all_clubs')) 
+		return redirect(url_for('clubs.club_detail', club_id=current_user.club_id)) 
 			
 	else: 
 		print(form.errors)
 		flash('Error', 'danger')
-		return redirect(url_for('clubs.all_clubs')) 
+		return redirect(url_for('clubs.club_detail', club_id=current_user.club_id)) 
 
-	return redirect(url_for('clubs.all_clubs'))
+	return redirect(url_for('clubs.club_detail', club_id=current_user.club_id)) 
 
 @clubs.route("/new_club", methods=['GET','POST']) 
 @login_required 

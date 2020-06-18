@@ -69,8 +69,6 @@ def edit_roles(club_id):
 	form = RolesForm()
 	club = Clubs.query.get_or_404(club_id) 
 
-	
-
 
 	if (current_user.role == 'president') or (current_user.role == 'admin') : 
 		if form.validate_on_submit():  
@@ -117,7 +115,7 @@ def change_image(id):
 
 	return render_template('update_profile.html', title="Profile", form=form) 
 
-@users.route("/update_profile/delete/<id>", methods=['POST'])
+@users.route("/update_profile/delete/<id>", methods=['POST', 'GET'])
 @login_required
 def delete_picture(id): 
 	if current_user.is_authenticated: 

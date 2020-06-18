@@ -72,7 +72,7 @@
     <div class = "container">
     <div class="row">
       <div class="col-8"> 
-            <h1 style="font-size:33px; font-family:Verdana; text-align:center;"> Recent Club Activities </h1>
+            <h1 style="font-size:33px; font-family:Roboto Slab; text-align:center;"> Recent Club Activities </h1>
             {% for activity in activities.items %} 
                 {% if activity.club_id == club.id %}
                   <figure class="item" style="display:inline-block">
@@ -112,24 +112,60 @@
         </div>
 
         <div class="col-4"> 
-              <h1 style="font-size:32px; font-family:Verdana; text-align:center;"> Officers </h1> 
-                  <ul class="list-group">
-                    {% for user in club.people|sort(attribute="firstname") %} 
-                         {% if user.role != 'member' %}
-                             <a href="{{ url_for('users.profile', id=user.id) }}" class="list-group-item">{{  user.firstname }} {{ user.lastname }} -> <strong> {{ user.role.upper() }} </strong> </a>    
-                          {% endif %}       
-                     {% endfor %}
-              </ul> 
+              <h1 style="font-size:32px; font-family:Sriracha; text-align:center;"> Officers </h1>  
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Batch</th>
+                    <th scope="col">Role</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for user in club.people|sort(attribute="firstname") %} 
+                  <tr>
+                    
+                     {% if user.role != 'member' %}
+                         <td><a href="{{ url_for('users.profile', id=user.id) }}">{{  user.firstname }} {{ user.lastname }}   </a></td> 
+                         <td> {{ user.batch }} </td>
+                         <td><strong> {{ user.role.upper() }} </strong></td>   
+                      {% endif %}                         
+                   </tr>
+                   {% endfor %}
+                 </tbody>
+               </table>
+              
+             <!--  <ul class="list-group">
+                {% for user in club.people|sort(attribute="firstname") %} 
+                     {% if user.role != 'member' %}
+                         <a href="{{ url_for('users.profile', id=user.id) }}" class="list-group-item">{{  user.firstname }} {{ user.lastname }} -> <strong> {{ user.role.upper() }} </strong> </a>    
+                      {% endif %}       
+                 {% endfor %}
+              </ul>  -->
               <br> 
               <br>
-              <h1 style="font-size:32px; font-family:Verdana; text-align:center;"> Members </h1> 
-              <ul class="list-group">
-                {% for user in club.people %}  
-                    {% if user.role == 'member' %}
-                       <a href="{{ url_for('users.profile', id=user.id) }}" class="list-group-item">{{  user.firstname }} {{ user.lastname }} </a>    
-                    {% endif %}   
-                 {% endfor %}
-              </ul> 
+              <h1 style="font-size:32px; font-family:Sriracha; text-align:center;"> Members </h1> 
+          
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Batch</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for user in club.people %}
+                  <tr>
+                    
+                     {% if user.role == 'member' %}
+                         <td><a href="{{ url_for('users.profile', id=user.id) }}">{{  user.firstname }} {{ user.lastname }}   </a></td> 
+                         <td> {{ user.batch }}</td>
+                         
+                      {% endif %}                         
+                   </tr>
+                   {% endfor %}
+                 </tbody>
+               </table>
         </div>
       </div>
     </div> 

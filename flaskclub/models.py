@@ -64,7 +64,7 @@ class Activities(db.Model, UserMixin):
 	image_file = db.Column('image', db.String(20), nullable=False, default='default.jpg')	 
 	date_posted = db.Column('date_posted', db.DateTime, nullable=False)
 	
-	club_id = db.Column('club_id', db.Integer, db.ForeignKey('clubs.id'), nullable=False)
+	club_id = db.Column('club_id', db.Integer, db.ForeignKey('clubs.id'))
 
 	def __repr__(self):
 		return f"Activities('{self.name}')" 
