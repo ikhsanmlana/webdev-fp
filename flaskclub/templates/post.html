@@ -14,7 +14,8 @@
       {% endif %}
     <div class="media-body"> 
       <div style="margin-bottom:45px;">
-        <div class="article-metadata">
+        <div class="article-metadata"> 
+          <img class="rounded-circle img-fluid" height="25px" width="25px" src="{{ url_for('static', filename='profile_picture/' + post.author.image_file) }}" style="margin-right:0px">
           <a class="mr-2" href="{{ url_for('users.profile', id=post.author.id) }}">{{ post.author.firstname }} {{post.author.lastname}}</a>
           <small class="text-muted">{{ post.date_posted }}</small>
           <h2 class="article-title">{{ post.title }}</h2>
@@ -26,7 +27,8 @@
 
     {% for reply in replies %}
     <div style="margin-bottom:25px;">
-        <div class="article-metadata">
+        <div class="article-metadata"> 
+            <img class="rounded-circle img-fluid" height="25px" width="25px" src="{{ url_for('static', filename='profile_picture/' + reply.author.image_file) }}" style="margin-right:0px">
             <a class="mr-2" href="{{ url_for('users.profile', id=reply.author.id) }}">{{ reply.author.firstname }} {{reply.author.lastname}}</a>
             <small class="text-muted">{{ reply.date_posted }}</small>
         </div>

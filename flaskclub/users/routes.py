@@ -56,10 +56,10 @@ def logout():
 	return redirect(url_for('main.home'))
 
 @users.route("/profile/<id>", methods=['GET', 'POST'])
-def profile(id):
-	myclub = Clubs.query.get_or_404(current_user.club_id) 
+def profile(id):	
 	club = Clubs.query.all() 
 	student = Student.query.get_or_404(id)
+	myclub = Clubs.query.get_or_404(student.club_id) 
 	
 	return render_template('profile.html', title='Profile', myclub=myclub, student=student, club=club) 
 

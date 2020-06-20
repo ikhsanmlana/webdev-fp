@@ -17,6 +17,7 @@
           	{% for post in posts.items %}
           	<div class = "content-section w-25 p-1" style="margin:0 auto;margin-bottom:20px">
 	            <div class="article-metadata">
+                <img class="rounded-circle img-fluid" height="25px" width="25px" src="{{ url_for('static', filename='profile_picture/' + post.author.image_file) }}" style="margin-right:0px">
 	              <a class="mr-2" href="#" style="color:black">{{ post.author.firstname }} {{post.author.lastname}}</a>
 	              <small class="text-muted">{{ post.date_posted }}</small>
 	            </div>
