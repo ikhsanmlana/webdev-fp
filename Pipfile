@@ -16,6 +16,7 @@ mysqlclient = "*"
 pymysql = "*"
 mysqldb-wrapper = "*"
 mysql-connector-python = "*"
+requests = "*"
 
 [requires]
 python_version = "3.8"

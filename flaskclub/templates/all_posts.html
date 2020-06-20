@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block content %}
+
+{% for post in posts %}
+	{% for key,value in post.items() %}
+		<p>{{value}}</p>
+	{% endfor %}
+
+{% endfor %}
+
+{% endblock content %}

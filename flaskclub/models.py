@@ -1,6 +1,7 @@
 import datetime, time 
 from flaskclub import db, login_manager
 from flask_login import UserMixin
+from flask import url_for
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -10,8 +11,31 @@ person = db.Table('person',
 	db.Column('club_id', db.Integer, db.ForeignKey('clubs.id'), primary_key=True),
 	db.Column('student_id', db.String(10), db.ForeignKey('student.student_id'), primary_key=True))
 
+class PaginatedAPIMixin(object):
+    @staticmethod
+    def to_collection_dict(query, page, per_page, endpoint, **kwargs):
+        resources = query.paginate(page, per_page, False)
+        data = {
+            'items': [item.to_dict() for item in resources.items],
+            '_meta': {
+                'page': page,
+                'per_page': per_page,
+                'total_pages': resources.pages,
+                'total_items': resources.total
+            },
+            '_links': {
+                'self': url_for(endpoint, page=page, per_page=per_page,
+                                **kwargs),
+                'next': url_for(endpoint, page=page + 1, per_page=per_page,
+                                **kwargs) if resources.has_next else None,
+                'prev': url_for(endpoint, page=page - 1, per_page=per_page,
+                                **kwargs) if resources.has_prev else None
+            }
+        }
+        return data
 
-class Student(db.Model, UserMixin): 
+
+class Student(PaginatedAPIMixin, db.Model, UserMixin): 
 	__tablename__ = 'student'
 	id = db.Column('student_id', db.String(10), primary_key=True) 
 	firstname = db.Column('first_name', db.String(255), nullable=False) 
@@ -31,6 +55,21 @@ class Student(db.Model, UserMixin):
 
 	def __repr__(self):
 		return f"Student('{self.firstname}', '{self.lastname}', '{self.email}')"
+
+	def to_dict(self):
+		data = {'id':self.id, 
+				'firstname':self.firstname, 
+				'lastname':self.lastname, 
+				'email':self.email, 
+				'gender':self.gender,
+				'batch':self.batch,
+				'club_id':self.club_id, 
+				'role':self.role,
+				'links': {
+					'self': url_for('api.get_user', id=self.id)
+					}
+				} 
+		return data
 
 
 class BinusID(db.Model, UserMixin):
@@ -53,9 +92,20 @@ class Clubs(db.Model, UserMixin):
 	activities = db.relationship('Activities', backref='activ', lazy=True) 
 	# posts = db.relationship('Post', backref='club', lazy=True) 
 	
-
 	def __repr__(self):
 		return f"Clubs('{self.name}')" 
+
+	def to_dict(self):
+		data = {'id':self.id, 
+				'name':self.name, 
+				'contact':self.contact, 
+				'email':self.email, 
+				'acronym':self.acronym,
+				'links': {
+					'self': url_for('api.get_club', id=self.id)
+					}
+				} 
+		return data
 
 class Activities(db.Model, UserMixin): 
 	__tablename__ = 'activities'
@@ -69,7 +119,7 @@ class Activities(db.Model, UserMixin):
 	def __repr__(self):
 		return f"Activities('{self.name}')" 
 
-class Post(db.Model, UserMixin):
+class Post(PaginatedAPIMixin, db.Model, UserMixin):
 	__tablename__ = 'post'
 	id = db.Column('id', db.Integer, primary_key=True)
 	title = db.Column('title', db.String(100), nullable=False)
@@ -81,6 +131,17 @@ class Post(db.Model, UserMixin):
 
 	def __repr__(self):
 	    return f"Post('{self.title}', '{self.date_posted}')"
+
+	def to_dict(self):
+		data = {'id':self.id, 
+				'title':self.title, 
+				'date_posted':self.date_posted, 
+				'content':self.content, 
+				'author':self.user_id
+				} 
+		return data
+
+
 
 class Reply(db.Model, UserMixin):
 	__tablename__ = 'reply'

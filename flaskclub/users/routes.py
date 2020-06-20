@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, Blueprint
+from flask import render_template, flash, redirect, url_for, Blueprint, request, jsonify
 from flaskclub import app, db, bcrypt
 from flaskclub.users.forms import RegistrationForm, LoginForm, RolesForm, UpdateAccountForm
 from flaskclub.models import Student, BinusID, Clubs, Admin
@@ -6,6 +6,8 @@ from flask_login import login_user, current_user, logout_user, login_required
 from flaskclub.users.utils import save_picture_profile
 
 users = Blueprint('users', __name__)
+
+
 
 
 @users.route("/register", methods=['GET','POST'])
@@ -16,14 +18,16 @@ def register():
 
 	if form.validate_on_submit(): 
 		user_id = BinusID.query.filter_by(id=form.student_id.data).first()
-		if user_id:
+		if user_id: 
+			
+			
 			hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
 			user = Student(firstname=form.firstname.data, lastname=form.lastname.data, email=form.email.data, password=hashed_password, gender=form.gender.data, batch=form.batch.data, id=form.student_id.data)
 			user_id.email=form.email.data 
 
-
 			db.session.add(user)
 			db.session.commit()
+			
 
 			flash('Account Created!', 'success')
 			return redirect(url_for('users.login')) 

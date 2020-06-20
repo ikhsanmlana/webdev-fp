@@ -114,3 +114,22 @@ def new_club():
 
 	
 	return render_template('add_club.html', title="New Club", form=form, clubs=all_clubs)
+
+@clubs.route("/delete_club/<int:club_id>", methods=['GET','POST']) 
+@login_required 
+def delete_club(club_id):
+
+	if (current_user.role == 'admin'): 
+		Clubs.query.filter_by(id=club_id).delete()
+
+		db.session.commit()
+		flash('Club Deleted!', 'success') 
+
+		return redirect(url_for('clubs.all_clubs')) 
+			
+	else: 
+		print(form.errors)
+		flash('Error', 'danger')
+		return redirect(url_for('clubs.club_detail', club_id=club_id)) 
+
+	return redirect(url_for('clubs.club_detail', club_id=club_id)) 
