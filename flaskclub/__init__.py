@@ -5,7 +5,7 @@ from flask_login import LoginManager
 
 
 
-app = Flask(__name__)	
+application = app = Flask(__name__)	
 
 app.config['SECRET_KEY'] = 'very-secret-much'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:''@localhost/binus_club' 
@@ -21,7 +21,7 @@ bcrypt = Bcrypt(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'users.login'
 
-from flaskclub.users.routes import users
+from flaskclub.users.routes import users 
 from flaskclub.forum.routes import forum
 from flaskclub.clubs.routes import clubs
 from flaskclub.main.routes import main
